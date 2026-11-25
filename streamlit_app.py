@@ -1,3 +1,4 @@
+import math
 from pathlib import Path
 
 import streamlit as st
@@ -69,7 +70,11 @@ with st.form("application"):
             )
     if st.form_submit_button("Score application", type="primary"):
         values = {field: st.session_state[field] for fields in GROUPS.values() for field, _ in fields}
-        if values["min_balance_before_loan"] > min(values["avg_balance_before_loan"], values["last_balance_before_loan"]):
+        if any(value is None or not math.isfinite(value) for value in values.values()):
+            st.error("Enter a finite number for every field. The last assessment is shown above.")
+        elif any(values[name] < 0 for name in COUNTS):
+            st.error("Counts and account age must be zero or positive.")
+        elif values["min_balance_before_loan"] > min(values["avg_balance_before_loan"], values["last_balance_before_loan"]):
             st.error("Minimum balance must be at or below both mean and most recent balance.")
         else:
             st.session_state.submitted = values
