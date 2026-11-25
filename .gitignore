@@ -1,0 +1,15 @@
+.env
+.env.*
+!.env.example
+.streamlit/secrets.toml
+*.csv
+*.zip
+*.log
+.manus-logs/
+node_modules/
+dist/
+__pycache__/
+.venv/
+.pytest_cache/
+.ipynb_checkpoints/
+Data_cleaned/

@@ -1,0 +1,197 @@
+{
+  "0. Baseline (RF mặc định, class_weight)": {
+    "pr_auc": 0.7882,
+    "roc_auc": 0.9299,
+    "accuracy": 0.9229,
+    "recall": 0.3269,
+    "precision": 0.96,
+    "f1": 0.4829
+  },
+  "1. Stacking RF+ExtraTrees → LR": {
+    "pr_auc": 0.7603,
+    "roc_auc": 0.9299,
+    "accuracy": 0.9211,
+    "recall": 0.3436,
+    "precision": 0.8867,
+    "f1": 0.4905
+  },
+  "2. Weighted RF (Bad:Good = 5:1)": {
+    "pr_auc": 0.8008,
+    "roc_auc": 0.9297,
+    "accuracy": 0.9303,
+    "recall": 0.391,
+    "precision": 0.9667,
+    "f1": 0.5488
+  },
+  "3. SHAP top-8 (Feature Selection)": {
+    "pr_auc": 0.7791,
+    "roc_auc": 0.9147,
+    "accuracy": 0.9339,
+    "recall": 0.4744,
+    "precision": 0.9056,
+    "f1": 0.611
+  },
+  "4. LightGBM SHAP top-8": {
+    "pr_auc": 0.7761,
+    "roc_auc": 0.9125,
+    "accuracy": 0.9284,
+    "recall": 0.6064,
+    "precision": 0.7504,
+    "f1": 0.6514
+  },
+  "5. Optuna-tuned LightGBM": {
+    "pr_auc": 0.7442,
+    "roc_auc": 0.9067,
+    "accuracy": 0.9339,
+    "recall": 0.7359,
+    "precision": 0.7145,
+    "f1": 0.7153
+  },
+  "6. LightGBM SHAP top-12": {
+    "pr_auc": 0.8215,
+    "roc_auc": 0.9441,
+    "accuracy": 0.9468,
+    "recall": 0.6885,
+    "precision": 0.8306,
+    "f1": 0.7412
+  },
+  "7. XGBoost SHAP top-12": {
+    "pr_auc": 0.841,
+    "roc_auc": 0.9458,
+    "accuracy": 0.945,
+    "recall": 0.7026,
+    "precision": 0.8125,
+    "f1": 0.7391
+  },
+  "8. Threshold Optimization XGBoost (F1-optimal, thr=0.7248)": {
+    "pr_auc": 0.841,
+    "roc_auc": 0.9458,
+    "accuracy": 0.956,
+    "recall": 0.6557,
+    "precision": 0.9302,
+    "f1": 0.7692
+  },
+  "_meta": {
+    "best_model": "7. XGBoost SHAP top-12",
+    "selection_criteria": "F1 Score cao nhất qua Stratified 5-Fold CV, sau đó tối ưu threshold",
+    "task": "Loan Status Classification (gộp theo hành vi trả nợ)",
+    "label_encoding": {
+      "0": "Good (status A, C)",
+      "1": "Bad (status B, D)"
+    },
+    "decision_thresholds": {
+      "default": 0.5,
+      "f1_optimal_on_oof": 0.7248,
+      "fbeta_1.15_optimal": 0.5675,
+      "cost_optimal": 0.1652,
+      "recommended_for_deployment": 0.5
+    },
+    "feature_cols": [
+      "amount",
+      "duration",
+      "payments",
+      "account_age_days",
+      "owner_age",
+      "n_disponents",
+      "n_orders",
+      "total_order_amount",
+      "avg_order_amount",
+      "n_trans_before_loan",
+      "avg_balance_before_loan",
+      "std_balance_before_loan",
+      "min_balance_before_loan",
+      "max_balance_before_loan",
+      "last_balance_before_loan",
+      "avg_amount_before_loan",
+      "total_amount_before_loan",
+      "purpose",
+      "frequency",
+      "region",
+      "division",
+      "owner_sex",
+      "is_local_client",
+      "has_card_before_loan"
+    ],
+    "numeric_cols": [
+      "amount",
+      "duration",
+      "payments",
+      "account_age_days",
+      "owner_age",
+      "n_disponents",
+      "n_orders",
+      "total_order_amount",
+      "avg_order_amount",
+      "n_trans_before_loan",
+      "avg_balance_before_loan",
+      "std_balance_before_loan",
+      "min_balance_before_loan",
+      "max_balance_before_loan",
+      "last_balance_before_loan",
+      "avg_amount_before_loan",
+      "total_amount_before_loan"
+    ],
+    "categorical_cols": [
+      "purpose",
+      "frequency",
+      "region",
+      "division",
+      "owner_sex",
+      "is_local_client",
+      "has_card_before_loan"
+    ],
+    "shap_selected_numeric_cols": [
+      "account_age_days",
+      "amount",
+      "avg_amount_before_loan",
+      "avg_balance_before_loan",
+      "last_balance_before_loan",
+      "min_balance_before_loan",
+      "n_disponents",
+      "n_orders",
+      "n_trans_before_loan",
+      "payments",
+      "std_balance_before_loan",
+      "total_order_amount"
+    ],
+    "shap_selected_categorical_cols": [],
+    "test_size": 0.2,
+    "random_state": 42,
+    "feature_engineering_notes": {
+      "account_age_days": "Số ngày từ khi mở tài khoản đến ngày cấp khoản vay",
+      "n_disponents": "Số người có quyền trên tài khoản (đếm theo disposition)",
+      "is_local_client": "1 nếu chủ tài khoản cùng khu vực (district) với tài khoản",
+      "has_card_before_loan": "1 nếu có thẻ được cấp TRƯỚC ngày vay (chống leakage)",
+      "n_orders/total_order_amount/avg_order_amount": "Thống kê lệnh thanh toán định kỳ của tài khoản",
+      "*_before_loan (n_trans, avg/std/min/max balance, avg/total amount, last_balance)": "Thống kê giao dịch CHỈ tính trên các giao dịch có ngày TRƯỚC ngày vay (chống leakage thời gian)"
+    },
+    "data_sources": [
+      "completedacct.csv",
+      "completedclient.csv",
+      "completeddisposition.csv",
+      "completeddistrict.csv",
+      "completedloan.csv",
+      "completedcard.csv",
+      "completedorder.csv",
+      "completedtrans.csv"
+    ],
+    "test_metrics_at_recommended_threshold": {
+      "accuracy": 0.9489,
+      "recall": 0.6667,
+      "precision": 0.8333,
+      "f1": 0.7407,
+      "roc_auc": 0.924,
+      "pr_auc": 0.7003,
+      "confusion_matrix": [
+        [
+          120,
+          2
+        ],
+        [
+          5,
+          10
+        ]
+      ]
+    }
+  }
+}

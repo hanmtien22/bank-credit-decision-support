@@ -1,0 +1,62 @@
+CREATE TABLE `decision_thresholds` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`userId` int NOT NULL,
+	`risk_threshold` decimal(5,4) NOT NULL DEFAULT '0.5',
+	`approval_threshold` decimal(5,4) NOT NULL DEFAULT '0.7248',
+	`auto_review_threshold` decimal(5,4) NOT NULL DEFAULT '0.3',
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
+	CONSTRAINT `decision_thresholds_id` PRIMARY KEY(`id`)
+);
+--> statement-breakpoint
+CREATE TABLE `scoring_history` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`userId` int NOT NULL,
+	`amount` decimal(12,2),
+	`duration` int,
+	`payments` decimal(12,2),
+	`account_age_days` int,
+	`owner_age` int,
+	`n_disponents` int,
+	`n_orders` int,
+	`total_order_amount` decimal(12,2),
+	`avg_order_amount` decimal(12,2),
+	`n_trans_before_loan` int,
+	`avg_balance_before_loan` decimal(12,2),
+	`std_balance_before_loan` decimal(12,2),
+	`min_balance_before_loan` decimal(12,2),
+	`max_balance_before_loan` decimal(12,2),
+	`last_balance_before_loan` decimal(12,2),
+	`avg_amount_before_loan` decimal(12,2),
+	`total_amount_before_loan` decimal(12,2),
+	`purpose` varchar(100),
+	`frequency` varchar(100),
+	`region` varchar(100),
+	`division` varchar(100),
+	`owner_sex` varchar(10),
+	`is_local_client` int,
+	`has_card_before_loan` int,
+	`risk_probability` decimal(5,4) NOT NULL,
+	`risk_label` varchar(10) NOT NULL,
+	`risk_threshold` decimal(5,4) NOT NULL,
+	`approval_threshold` decimal(5,4) NOT NULL,
+	`auto_review_threshold` decimal(5,4) NOT NULL,
+	`decision_status` varchar(50) NOT NULL,
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
+	CONSTRAINT `scoring_history_id` PRIMARY KEY(`id`)
+);
+--> statement-breakpoint
+CREATE TABLE `users` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`openId` varchar(64) NOT NULL,
+	`name` text,
+	`email` varchar(320),
+	`loginMethod` varchar(64),
+	`role` enum('user','admin') NOT NULL DEFAULT 'user',
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
+	`lastSignedIn` timestamp NOT NULL DEFAULT (now()),
+	CONSTRAINT `users_id` PRIMARY KEY(`id`),
+	CONSTRAINT `users_openId_unique` UNIQUE(`openId`)
+);
